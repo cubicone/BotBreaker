@@ -10,6 +10,7 @@ Tumblr already has a python API, pytumblr (https://github.com/tumblr/pytumblr), 
 At present the recreated functions include:
 
 GENERAL:
+
     BLOG:
         - Info
         - Avatar
@@ -51,6 +52,7 @@ GENERAL:
 
     MISC:
         - Tagged
+        
 SPECIFIC:
 
 # Author
