@@ -24,7 +24,7 @@ class User:
         self.base_url = "https://api.tumblr.com/v2/user/"
 
 
-    # user info
+    # user info 
     # requires `auth`
     # `auth` is system handled
     def userInfo(self):
