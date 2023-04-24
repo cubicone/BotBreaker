@@ -352,22 +352,6 @@ def fetchPost(auth=oauth, control_blog=own_uuid, post_id="", post_format="npf"):
     return requests.get(request, json={"post_format" : post_format}, auth=auth)
 
 
-# post
-# requires `target_blog`, `npf_content`, and `auth`
-# `target_blog` specifies the id of the blog that you are posting a post from
-# `npf_content` takes NPF-structured content data
-# `auth` is system handled
-# `npf_layout` takes NPF-structured layout data [""]
-# `state` determines if the post should be posted immediately or queued {"published" or "queued"} ["published"]
-# `publish_on` states a timestamp that the post should be published at when `state` is "quueued" ["Now"]
-# `date` states a timestamp that the post should be backdated to ["Now"]
-# `tags` specifies the tag(s) that the post should contain [[]]
-# `source_url` is the source attribution [""]
-# `send_to_twitter` sends the post to twitter automatically [False]
-# `is_private` determines whether an answer should be a private answer [False]
-# `slug` is the message to add to the post's permalink
-# `interactability_reblog` decides who can interact by reblogging {"everyone" or "noone"} ["everyone"]
-    
 # post or reblog
 # requires `control_blog`, and `auth`
 # `control_blog` specifies the id of the blog that you are posting a post from
@@ -385,7 +369,6 @@ def fetchPost(auth=oauth, control_blog=own_uuid, post_id="", post_format="npf"):
 # `interactability_reblog` decides who can interact by reblogging {"everyone" or "noone"} ["everyone"]
 # `hide_trail` determines if the reblog trail should be associated with your reblog [False]
 # `exclude_trail_items` is a list of items that should be excluded in the trail results [[]]
-
 def post(auth=oauth, control_blog=own_uuid, target_blog="", post_id="", hide_trail=False, exclude_trail_items=[], npf_content=[], npf_layout=[], state="published", publish_on="Now", date="Now", tags=["test"], source_url="", send_to_twitter=False, is_private=True, slug="", interactability_reblog='everyone'):
 
     # ensure post_id is, in fact, a string

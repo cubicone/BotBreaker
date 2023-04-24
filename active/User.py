@@ -1,5 +1,5 @@
 # Tumblr API User Functions
-# The following is an organised, usable set of all functions which pertain to user actions (all of which require OAuth1)
+# The following is an organised, usable set of all functions which pertain to User actions (some of which require OAuth1)
 # This is in service of the BotBreaker project
 # Ver 1.0.0
 
@@ -8,23 +8,23 @@ from requests_oauthlib import OAuth1
 
 class User:
 
-    # constructor for User
-    def __init__(self, uuid_, api_key_, api_secret_, oauth_key_, oauth_secret_):
-        self.uuid = uuid_
-        self.api_key = api_key_
-        self.api_secret = api_secret_
-        self.oauth_key = oauth_key_
-        self.oauth_secret = oauth_secret_
+    # constructors for User
+    # first time
+    def __init__(self, uuid="", api_key="", api_secret="", oauth_key="", oauth_secret="", oauth=""):
+
+        self.uuid = uuid
+        self.api_key = api_key
+        self.api_secret = api_secret
+        self.oauth_key = oauth_key
+        self.oauth_secret = oauth_secret
         self.oauth = OAuth1(client_key=self.api_key,
                             client_secret=self.api_secret,
                             resource_owner_key=self.oauth_key,
                             resource_owner_secret=self.oauth_secret)
-
         # all requests start thus
         self.base_url = "https://api.tumblr.com/v2/user/"
 
-
-    # user info 
+    # user info
     # requires `auth`
     # `auth` is system handled
     def userInfo(self):
