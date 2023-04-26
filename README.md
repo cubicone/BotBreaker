@@ -23,10 +23,10 @@ At present the recreated functions include:
             - Followed By
             - Posts List
             - Queue List
-            - Reorder Queue List
-            - Shuffle Queue List
-            - Draft List
-            - Submission List
+            - Reorder Queue
+            - Shuffle Queue
+            - Drafts List
+            - Submissions List
             - Activity
             - Post
             - Reblog
@@ -35,11 +35,11 @@ At present the recreated functions include:
             - Delete
             - Notes
         USER:
-            - User Info
-            - User Limits
-            - User Dashboard
-            - User Likes List
-            - User Following List
+            - Info
+            - Limits
+            - Dashboard
+            - Likes List
+            - Following List
             - Follow
             - Unfollow
             - Like
@@ -51,6 +51,8 @@ At present the recreated functions include:
             - Tagged
 
     SPECIFIC:
+        - Bulk List
+        - Get Attribute List
 
 # Author
 My name is cubic and I am a software developer with some hardware on the side. Feel free to get in touch here or on BotBreaker's Tumblr (https://www.tumblr.com/botbreaker).

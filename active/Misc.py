@@ -9,7 +9,7 @@ from requests_oauthlib import OAuth1
 class Misc:
 
     # contructors for Misc
-    def __init__(self, uuid="", api_key="", api_secret="", oauth_key="", oauth_secret="", oauth=""):
+    def __init__(self, uuid="", api_key="", api_secret="", oauth_key="", oauth_secret=""):
 
         self.uuid = uuid
         self.api_key = api_key
@@ -45,4 +45,4 @@ class Misc:
             json["before"] = before
 
         # returns response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)

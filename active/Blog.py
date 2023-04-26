@@ -3,7 +3,6 @@
 # This is in service of the BotBreaker project
 # Ver 1.0.0
 
-
 import requests
 from requests_oauthlib import OAuth1
 import random
@@ -12,7 +11,7 @@ class Blog:
 
     # constructors for Blog
     # first time
-    def __init__(self, uuid="", api_key="", api_secret="", oauth_key="", oauth_secret="", oauth=""):
+    def __init__(self, uuid="", api_key="", api_secret="", oauth_key="", oauth_secret=""):
 
         self.uuid = uuid
         self.api_key = api_key
@@ -78,7 +77,7 @@ class Blog:
         json = {"offset" : offset,
                 "limit" : limit}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
     # block
     # requires `target_blog`, `control_blog`, and `auth`
@@ -91,7 +90,7 @@ class Blog:
         # build json
         json = {"blocked_tumblelog" : target_blog}
         # return the response
-        return requests.post(request, json=json, auth=self.oauth)
+        return requests.post(request, params=json, auth=self.oauth)
 
     # bulkBlock
     # requires `target_blogs`, `control_blog`, and `auth`
@@ -112,7 +111,7 @@ class Blog:
         # build json
         json = {"blocked_tumblelogs" : target_blogs_final}
         # return the response
-        return requests.post(request, json=json, auth=self.oauth)
+        return requests.post(request, params=json, auth=self.oauth)
 
     # unblock
     # requires `control_blog`, `target_blog`, and `auth`
@@ -125,7 +124,7 @@ class Blog:
         # build json
         json = {"blocked_tumblelog" : target_blog}
         # return the response
-        return requests.delete(request, json=json, auth=self.oauth)
+        return requests.delete(request, params=json, auth=self.oauth)
 
     # likes
     # requires `target_blog`, `api_key`, `auth`
@@ -136,7 +135,7 @@ class Blog:
     # `limit` defines the number of posts to pull from the index [20] {max 20}
     # `before` is the timestamp (in seconds) before which the system will look for data [-1]
     # `after` is the timestamp (in seconds) after which the system will look for data [-1]
-    def blogLikesList(self, target_blog, offset=0, limit=20, before="", after=""):
+    def likesList(self, target_blog, offset=0, limit=20, before="", after=""):
         # build the request with the appropriate variables
         request = self.base_url+target_blog+"/likes?api_key="+self.api_key
         
@@ -152,7 +151,7 @@ class Blog:
         else:
             json['offset'] = offset
 
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
         
     # following
     # requires `target_blog`, and `auth`
@@ -160,14 +159,14 @@ class Blog:
     # `auth` is system handled
     # `offset` defines the index to begin at in the complete following list [0]
     # `limit` defines the number of following to pull from the index [20] {max 20}
-    def blogFollowingList(self, target_blog, offset=0, limit=20):
+    def followingList(self, target_blog, offset=0, limit=20):
         # build the request with the appropriate variables
         request = self.base_url+target_blog+"/following"
         # build json
         json = {"limit" : limit, 
                 "offset" : offset}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
     # followers
     # requires `target_blog`, and `auth`
@@ -182,7 +181,7 @@ class Blog:
         json = {"limit" : limit, 
                 "offset" : offset}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
     # followedBy
     # requires `control_blog`, `target_blog`, and `auth`
@@ -255,7 +254,7 @@ class Blog:
             json["before"] = before
 
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
     # queue list
     # requires `target_blog`, and `auth`
@@ -272,7 +271,7 @@ class Blog:
                 "limit" : limit,
                 "filter" : filter}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
         
     # reorder queue list
     # requires `target_blog`, `post_id`, and `auth`
@@ -280,20 +279,20 @@ class Blog:
     # `auth` is system handled
     # `post_id` specfies which post you want to reorder [0]
     # `insert_after` specfies which index or post id to insert the `post_id` after {0 is the top} [0]
-    def reorderQueueList(self, control_blog, post_id="", insert_after=0):
+    def reorderQueue(self, control_blog, post_id="", insert_after=0):
         # build the request with the appropriate variables
         request = self.base_url+control_blog+"/posts/queue/reorder"
         # build json
         json = {"post_id" : post_id, 
                 "insert_after" : insert_after}
         # return the response
-        return requests.post(request, json=json, auth=self.oauth)
+        return requests.post(request, params=json, auth=self.oauth)
 
     # shuffle queue list
     # requires `target_blog`, and `auth`
     # `target_blog` specifies the id of the blog that you are shuffling the queue of
     # `auth` is system handled
-    def shuffleQueueList(self, target_blog):
+    def shuffleQueue(self, target_blog):
         # build the request with the appropriate variables
         request = self.base_url+target_blog+"/posts/queue/shuffle"
         # return the response
@@ -305,14 +304,14 @@ class Blog:
     # `auth` is system handled
     # `before_id` is similar to offset but works backwards [0]
     # `filter` specifies the HTML format [""]
-    def draftList(self, target_blog, before_id=0, filter=""):
+    def draftsList(self, target_blog, before_id=0, filter=""):
         # build the request with the appropriate variables
         request = self.base_url+target_blog+"/posts/draft"
         # build json
         json = {"before_id" : before_id,
                 "filter" : filter}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
     # submission list
     # requires `target_blog`, and `auth`
@@ -320,14 +319,14 @@ class Blog:
     # `auth` is system handled
     # `offset` defines the index to begin at in the complete posts list [0]
     # `filter` specifies the HTML format [""]
-    def submissionList(self, target_blog, offset=0, filter=""):
+    def submissionsList(self, target_blog, offset=0, filter=""):
         # build the request with the appropriate variables
         request = self.base_url+target_blog+"/posts/submission"
         # build json
         json = {"filter" : filter,
                 "offset" : offset}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
     # activity
     # requires `target_blog`, and `auth`
@@ -346,7 +345,7 @@ class Blog:
                 "rollups" : rollups,
                 "omit_post_ids" : omit_post_ids}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
     # fetch post
     # requires `target_blog`, and `auth`
@@ -362,7 +361,7 @@ class Blog:
         # build json
         json = {"post_format" : post_format}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
 
     # post or reblog
@@ -456,7 +455,7 @@ class Blog:
         request = self.base_url+control_blog+"/posts"
 
         # return the response
-        return requests.post(request, json=json, auth=self.oauth)
+        return requests.post(request, params=json, auth=self.oauth)
             
 
 
@@ -572,7 +571,7 @@ class Blog:
         # build request
         request = self.base_url+control_blog+"/posts/"+str(post_id)
         # return response
-        return requests.put(request, json=json, auth=self.oauth)
+        return requests.put(request, params=json, auth=self.oauth)
 
     # delete
     # requires `control_blog`, `post_id`, and `auth`
@@ -587,7 +586,7 @@ class Blog:
         # build json
         json = {"id" : post_id}
         # return the response
-        return requests.post(request, json=json, auth=self.oauth)
+        return requests.post(request, params=json, auth=self.oauth)
 
     # notes
     # requires `control_blog`, `api_key`, `post_id`, and `auth`
@@ -606,4 +605,4 @@ class Blog:
         json = {"mode" : mode,
                 "before_timestamp" : before_timestamp}
         # return the response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)

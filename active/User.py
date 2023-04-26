@@ -27,7 +27,7 @@ class User:
     # user info
     # requires `auth`
     # `auth` is system handled
-    def userInfo(self):
+    def info(self):
         # build request
         request = self.base_url+"info"
         # return response
@@ -36,7 +36,7 @@ class User:
     # user limits
     # requires `auth`
     # `auth` is system handled
-    def userLimits(self):
+    def limits(self):
         # build request
         request = self.base_url+"limits"
         # return response
@@ -52,7 +52,7 @@ class User:
     # `reblog_info` determines if extra reblog-type info is returned ["True"]
     # `notes_info` determines if extra notes-type info is returned ["True"]
     # `npf` return in npf format ["True"]
-    def userDashboard(self, type="", limit=20, offset=0, since_id=0, reblog_info=True, notes_info=True, npf=True):
+    def dashboard(self, type="", limit=20, offset=0, since_id=0, reblog_info=True, notes_info=True, npf=True):
         # prepare json for request
         json = {"limit" : limit, 
                 "offset" : offset, 
@@ -66,7 +66,7 @@ class User:
         # build request
         request = self.base_url+"dashboard"
         # return response
-        return requests.get(request, json=json, auth=self.oauth)
+        return requests.get(request, params=json, auth=self.oauth)
 
     # user likes
     # requires `auth`
@@ -75,7 +75,7 @@ class User:
     # `limit` defines the number of posts to pull from the index [20] {max 20}
     # `before` is the timestamp (in seconds) before which the system will look for data [-1]
     # `after` is the timestamp (in seconds) after which the system will look for data [-1]
-    def userLikesList(self, limit=20, offset=0, before=0, after=0):
+    def likesList(self, limit=20, offset=0, before=0, after=0):
         request = self.base_url+"likes"
 
         # constructs data given in the correct order and then returns the response
@@ -100,7 +100,7 @@ class User:
     # `auth` is system handled
     # `offset` defines the index to begin at in the complete blocked list [0]
     # `limit` defines the number of posts to pull from the index [20] {max 20}
-    def userFollowingList(self, limit=20, offset=0):
+    def followingList(self, limit=20, offset=0):
         # build requests
         request = self.base_url+"following"
         # return response
@@ -125,7 +125,7 @@ class User:
             json['url'] = url
 
         # return responses
-        return requests.post(request, json=json, auth=self.oauth)
+        return requests.post(request, params=json, auth=self.oauth)
 
     # unfollow
     # requires `auth`, and `url`
@@ -139,7 +139,7 @@ class User:
         json = {"url" : url}
 
         # return the response
-        return requests.post(request, json=json, auth=self.oauth)
+        return requests.post(request, params=json, auth=self.oauth)
 
 
     # like
@@ -153,7 +153,7 @@ class User:
         # build json
         json = {"id" : post_id, "reblog_key" : reblog_key}
         # return response
-        return requests.post(request, json=json , auth=self.oauth)
+        return requests.post(request, params=json , auth=self.oauth)
 
     # unlike
     # requires `auth`, `post_id`, and `reblog_key`
@@ -166,7 +166,7 @@ class User:
         # build json
         json = {"id" : post_id, "reblog_key" : reblog_key}
         # return response
-        return requests.post(request, json=json , auth=self.oauth)
+        return requests.post(request, params=json , auth=self.oauth)
 
     # get filtered tags
     # requires `auth`
@@ -187,7 +187,7 @@ class User:
         # build json
         json = {"filtered_tags" : filtered_tags}
         # return response
-        return requests.post(request, json=json, auth=self.oauth)
+        return requests.post(request, params=json, auth=self.oauth)
 
     # remove tag filter
     # requires `auth`, and `tag`
