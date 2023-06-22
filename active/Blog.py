@@ -11,18 +11,15 @@ class Blog:
 
     # constructors for Blog
     # first time
-    def __init__(self, uuid="", api_key="", api_secret="", oauth_key="", oauth_secret=""):
+    def __init__(self, security=""):
 
-        self.uuid = uuid
-        self.api_key = api_key
-        self.api_secret = api_secret
-        self.oauth_key = oauth_key
-        self.oauth_secret = oauth_secret
+        self.uuid, self.api_key, self.api_secret, self.oauth_key, self.oauth_secret = security.getDetails()
+
         self.oauth = OAuth1(client_key=self.api_key,
                             client_secret=self.api_secret,
                             resource_owner_key=self.oauth_key,
                             resource_owner_secret=self.oauth_secret)
-
+        
         # all requests start thus
         self.base_url = "https://api.tumblr.com/v2/blog/"
 

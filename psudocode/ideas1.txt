@@ -1,0 +1,186 @@
+-get all posts, followers, following, likes, queue [basically anything which has a response limit]
+{
+    total_response = []
+    i = 0
+    num_per_request = 20
+
+    #until you run out of 
+    while True:
+
+        cache_response_len = |total_response| #length store
+        total_response.update(fetchItems(offset=(i*num_per_request)).response.items_list) #add the newest response
+
+        if ( |total_response| - num_per_request ) < cache_response_len: #meaning less than num_per_request have been added since last time 
+            break #from the while loop
+
+        i+=1 #increment
+
+    return total_response
+}
+
+-get all of one attribute from list [get all id's from this list of posts, or similar]
+{
+    items_list = [] #previously a response from somewhere where you know what types of objects each item is [posts or blogs]
+    target_attrib = "test" #or similar [id or other]
+
+    results = []
+
+    for item in items_list:
+        try:
+            results.add(item.get(target_attrib)) #if attrib found, add attrib to results 
+        except AttributeError: #or error to that effect
+            results.add("") #add nothing if no attrib found
+
+    return results
+
+}
+
+- crawling tree [go from one blog to another, mapping the network it finds itself in]
+{
+    starting_blog = "botbreaker"
+
+    the crawler could spread through:
+        - likes [sometimes with permissions]
+        - posts 
+        - reblogs
+        - tags
+        - notes
+        - following [sometimes with permissions]
+        - followers [with permissions]
+
+}
+
+- bot identifier and sorter
+{
+    Bot Types:
+        NAMING-SCHEME:
+        How the bot can be identified potentially including information such as:
+            - susceptibility / likelyhood of tricking actual users
+            - date of creation
+            - pattern that the blog title itself appears under ("MichealJones2005" = firstname+lastname+DoB)
+
+        FUNCTION:
+        What the bot actually does / appears to do.
+        Different classifications may render different bots more or less dangerous.
+        Not limited to one function.
+
+            - Hive:
+            A hive bot has all its permissions open and is following others.
+            These could be cut into different classes such as:
+                - Class 1:
+                    Has no reblogs and locked likes but has their following tab open.
+                - Class 2:
+                    Has no reblogs but has open likes and open following.
+                - Class 3:
+                    Has posts, likes and following open.
+                - Potential
+                    Of any previous class but has no content, despite the openness.
+
+
+            - Tagger:
+            A tagger reposts or likes random or particular tags.
+            These could be cut into different classes such as:
+                - Random:
+                    No or yet unknown pattern of tag interaction
+                - Targeted:
+                    Known and reproducible pattern of tag interaction
+
+
+            - Linker:
+            A linker has posts with potentially malicious links in them.
+            Reblogging may lead to other connected bot accounts (which would fall under a joint Hive classification)
+            but apart from this the difference in posts and reblogs are immaterial.
+            These links could be added to a known repository also but they would need to be checked safely.
+
+            - Dead Node:
+            Just follows people if it does anything at all. The most annoying but possibly the least harmful type
+            in the beastiary to date. Easy to squash. Usually only identified by the look and namescheme
+
+            - Not a Bot:
+            Real account that has been identified as not a bot. Only uuid will suffice for logging.
+
+        DANGER:
+        Some functions of bots place them in different danger ratings.
+        The danger ratings as they stand are:
+            - Alpha: Active threat
+            This level denotes bots which are of the highest danger. These should be tackled and coordinated
+            first and foremost. Alpha rated bots are often high-class Hives, highly active linker bots or other 
+            special case machines. Documenting the activity of these is very important.
+            - Beta: Threat to the susceptible
+            Could do damage to those vulnerable to the effects of online scams.
+            - Omega/Dead: No threat
+            This level is the default denoting bots which aren't a problem at all (probably won't activate)
+            Characteristics of a bot which would reply "true" to "this sentance is false".
+}
+
+- logging [we have the basis of a process; now what do we want]
+{
+    We will need:
+        - Leadbot ID
+        - Sub-bot ID
+        - Timestamp
+        - Target Node
+        - Following Response / Locked Response / Fail Response
+        - Target Node Trail
+        - End Tag
+
+    Currently:
+        - Leadbot ID:
+            Its title and iteration that day are logged by "CRAWLER-1."
+        - Sub-bot ID:
+            Its iteration is logged by ".1" after the above
+        - Target Node:
+            Listed as "-botbreaker" after the above
+        - Timestamp:
+            Logged in ISO format under ids [marks function call start]
+        - Following Response:
+            Logged in a list of ids under timestamp, if found
+        - Locked Response:
+            Logged as "LOCKED" under the timestamp, if found
+        - Fail Response:
+            Not logged, but failure results in no log
+        - Target node trail:
+            Currently not logged ########
+        - End Tag
+            Logged as "#---" after any and all input.
+
+        To Note:
+            This is all being logged in one place but could be logged in more than one place.
+            Keeping this log as an overview seems good but seperate logs for different things
+            may be something to consider (id trail or the such).
+}
+
+- blue-team switcher [i just got rate limited; lets try and fix that]
+{
+    - avaliability test [check what accounts are online]
+    {
+        all_bots = ["botbreaker", "teambluepointone", "teambluepointtwo", "teambluepointthree", ... ]
+        results = {}
+
+        for bot in all_bots:
+            try:
+                sec = Security(bot)
+                user.limits()
+                results[bot] = 
+
+            except FileNotFound:
+                results[bot] = -1
+            except AuthFailed:
+                results[bot] = -1
+
+            i += 1
+        
+        # True for allowed connection and False for no connection
+        return results
+    }
+
+    - decide [another extention of security]
+    {
+        availibility = avaliabilityTest()
+        availiability.removeAll(False) #remove all entries where value is False
+        availible_connections = availiability.keySet()
+
+        target_connection = 
+    }
+
+}

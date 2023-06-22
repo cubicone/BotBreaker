@@ -1,32 +1,19 @@
 from requests_oauthlib import OAuth1
 import requests
 from Blog import Blog
+from Security import Security
 from User import User
 
-creds_file = open("./../Credentials/botbreaker.txt", "r")
-
-uuid =          creds_file.readline()[:-1] # uuid on line one
-api_key =       creds_file.readline()[:-1] # api_key on line two
-api_secret =    creds_file.readline()[:-1] # api_secret on line three
-oauth_key =     creds_file.readline()[:-1] # oauth_key on line four
-oauth_secret =  creds_file.readline()[:-1] # oauth_secret on line five
-
-creds_file.close()
-
-blog = Blog(uuid=uuid, api_key=api_key, api_secret=api_secret, oauth_key=oauth_key, oauth_secret=oauth_secret)
-user = User(uuid, api_key, api_secret, oauth_key, oauth_secret)
+sec = Security("botbreaker")
 
 class Own:
     
     # constructors for User
     # first time
-    def __init__(self, uuid="", api_key="", api_secret="", oauth_key="", oauth_secret=""):
+    def __init__(self, security=""):
 
-        self.uuid = uuid
-        self.api_key = api_key
-        self.api_secret = api_secret
-        self.oauth_key = oauth_key
-        self.oauth_secret = oauth_secret
+        self.uuid, self.api_key, self.api_secret, self.oauth_key, self.oauth_secret = security.getDetails()
+    
         self.oauth = OAuth1(client_key=self.api_key,
                             client_secret=self.api_secret,
                             resource_owner_key=self.oauth_key,
@@ -34,9 +21,10 @@ class Own:
 
         # all requests start thus
         self.base_url = "https://api.tumblr.com/v2/user/"
+        
+        self.blog = Blog(self.uuid, self.api_key, self.api_secret, self.oauth_key, self.oauth_secret)
+        self.user = User(self.uuid, self.api_key, self.api_secret, self.oauth_key, self.oauth_secret)
 
-    blog = Blog(uuid, api_key, api_secret, oauth_key, oauth_secret)
-    user = User(uuid, api_key, api_secret, oauth_key, oauth_secret)
 
     # bulk blog likes list
     # requires `target_blog`, and `return_type`
@@ -44,6 +32,9 @@ class Own:
     # `return_type` is the type of items to return
     # `num_results` determines how many results to return
     def bulkList(self, target_blog, target_type, num_results=240):
+
+        blog = self.blog
+        user = self.user
 
         # find
         match target_type:
@@ -142,11 +133,14 @@ class Own:
 
     def getAttributeList(self, list_of_objects, attribute):
 
+        # check if function applys to target params
         if not (isinstance(list_of_objects, list)):
             return "Failed: Object passed is not a list.\n " + list_of_objects
 
+        # list to be returned
         results = []
 
+        # add all of the relavent attribs
         for object in list_of_objects:
             if attribute in object:
                 results.append(object[str(attribute)])
@@ -154,5 +148,85 @@ class Own:
                 results.append("")
 
         return results
+    
+    # avaliability
+    def availability(self):
+        # list of all blogs theoretically active and ready
+        blogs = ["botbreaker", "teambluepointone"]
+        # results table
+        availability = {}
 
-own = Own(uuid=uuid, api_key=api_key, api_secret=api_secret, oauth_key=oauth_key, oauth_secret=oauth_secret)
+        # check all blogs
+        for blog in blogs:
+            try:
+                # get security file on current blog
+                current_sec = Security(blog)
+
+                # get user functions on current blog authentication
+                user = User(current_sec)
+
+                # if the limits returned nicely, this can be seen as the unit being ready
+                if (user.limits().status_code == 200):
+                    # readyness is marked with a 1
+                    availability[blog] = 1
+
+                # if the status code is not a pass, some error occoured
+                else:
+                    # non-readyness is marked with a -1
+                    availability[blog] = -1
+            
+            # no credentials file associated with the target user
+            except FileNotFoundError:
+                availability[blog] = -1
+            
+        return availability
+
+    # get connections which can be made right now
+    def getActiveConnections(self):
+        # get availability list
+        availability = self.availability()
+
+        # list for storing avalible connections from the above dictionary
+        available_connections = []
+
+        for blog in availability:
+
+            current_value = availability[blog]
+            # -1 is a fail, 1 is a pass
+            if (current_value > 0):
+                available_connections.append(blog)
+
+        return available_connections
+
+    # get connections which are down or error-filled
+    def getDormantConnections(self):
+        # get availability list
+        availability = self.availability()
+
+        # list for storing avalible connections from the above dictionary
+        dormant_connections = []
+
+        for blog in availability:
+
+            current_value = availability[blog]
+            # -1 is a fail, 1 is a pass
+            if (current_value < 0):
+                dormant_connections.append(blog)
+
+        return dormant_connections
+
+    # get connection from avalible connections
+    def getConnection(self):
+        # list of all active connections
+        active_connections = self.getActiveConnections()
+        # number of active connections
+        num_active_connections = len(active_connections)
+
+        if (num_active_connections == 0):
+            return
+        
+        # random connection from list
+        return active_connections[random.randint(0, num_active_connections-1)]
+        
+
+own = Own(sec.getDetails())
